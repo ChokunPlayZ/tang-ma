@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfileSetupRouteImport } from './routes/profile/setup'
+import { Route as JoinTripCodeRouteImport } from './routes/join/$tripCode'
 import { Route as AppSettingsRouteImport } from './routes/app/settings'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as AppTripsIndexRouteImport } from './routes/app/trips/index'
@@ -46,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
 const ProfileSetupRoute = ProfileSetupRouteImport.update({
   id: '/profile/setup',
   path: '/profile/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinTripCodeRoute = JoinTripCodeRouteImport.update({
+  id: '/join/$tripCode',
+  path: '/join/$tripCode',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
@@ -156,6 +162,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/api/upload': typeof ApiUploadRoute
   '/app/settings': typeof AppSettingsRoute
+  '/join/$tripCode': typeof JoinTripCodeRoute
   '/profile/setup': typeof ProfileSetupRoute
   '/api/auth/check': typeof ApiAuthCheckRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -181,6 +188,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/api/upload': typeof ApiUploadRoute
   '/app/settings': typeof AppSettingsRoute
+  '/join/$tripCode': typeof JoinTripCodeRoute
   '/profile/setup': typeof ProfileSetupRoute
   '/api/auth/check': typeof ApiAuthCheckRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -207,6 +215,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/api/upload': typeof ApiUploadRoute
   '/app/settings': typeof AppSettingsRoute
+  '/join/$tripCode': typeof JoinTripCodeRoute
   '/profile/setup': typeof ProfileSetupRoute
   '/api/auth/check': typeof ApiAuthCheckRoute
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -234,6 +243,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/upload'
     | '/app/settings'
+    | '/join/$tripCode'
     | '/profile/setup'
     | '/api/auth/check'
     | '/api/auth/login'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/upload'
     | '/app/settings'
+    | '/join/$tripCode'
     | '/profile/setup'
     | '/api/auth/check'
     | '/api/auth/login'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/api/upload'
     | '/app/settings'
+    | '/join/$tripCode'
     | '/profile/setup'
     | '/api/auth/check'
     | '/api/auth/login'
@@ -310,6 +322,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ApiUploadRoute: typeof ApiUploadRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  JoinTripCodeRoute: typeof JoinTripCodeRoute
   ProfileSetupRoute: typeof ProfileSetupRoute
   ApiAuthCheckRoute: typeof ApiAuthCheckRoute
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
@@ -351,6 +364,13 @@ declare module '@tanstack/react-router' {
       path: '/profile/setup'
       fullPath: '/profile/setup'
       preLoaderRoute: typeof ProfileSetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/$tripCode': {
+      id: '/join/$tripCode'
+      path: '/join/$tripCode'
+      fullPath: '/join/$tripCode'
+      preLoaderRoute: typeof JoinTripCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/settings': {
@@ -515,6 +535,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ApiUploadRoute: ApiUploadRoute,
   AppSettingsRoute: AppSettingsRoute,
+  JoinTripCodeRoute: JoinTripCodeRoute,
   ProfileSetupRoute: ProfileSetupRoute,
   ApiAuthCheckRoute: ApiAuthCheckRoute,
   ApiAuthLoginRoute: ApiAuthLoginRoute,

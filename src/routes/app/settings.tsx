@@ -37,7 +37,7 @@ function SettingsPage() {
                     credentials: 'include',
                 })
                 if (!response.ok) {
-                    router.navigate({ to: '/login' })
+                    router.navigate({ to: '/login', search: { redirect: undefined } })
                     return
                 }
                 const data = await response.json()
@@ -203,8 +203,8 @@ function SettingsPage() {
                 {/* Message */}
                 {message && (
                     <div className={`p-3 rounded-lg text-center ${message.type === 'success'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
                         }`}>
                         {message.text}
                     </div>

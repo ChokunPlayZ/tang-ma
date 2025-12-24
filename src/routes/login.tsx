@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
@@ -12,10 +12,14 @@ import {
 
 export const Route = createFileRoute('/login')({
     component: LoginPage,
+    validateSearch: (search: Record<string, unknown>) => ({
+        redirect: typeof search.redirect === 'string' ? search.redirect : undefined,
+    }),
 })
 
 function LoginPage() {
     const router = useRouter()
+    const { redirect } = useSearch({ from: '/login' })
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -34,7 +38,13 @@ function LoginPage() {
             }
 
             router.invalidate()
-            await router.navigate({ to: '/profile/setup' })
+
+            // If there's a redirect URL, go there; otherwise go to profile setup
+            if (redirect) {
+                await router.navigate({ to: redirect as any })
+            } else {
+                await router.navigate({ to: '/profile/setup' })
+            }
         } catch (error) {
             console.error('Login failed', error)
             alert('Login failed. Please try again.')

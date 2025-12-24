@@ -48,7 +48,7 @@ export function AppNavbar() {
                 method: 'POST',
                 credentials: 'include',
             })
-            router.navigate({ to: '/login' })
+            router.navigate({ to: '/login', search: { redirect: undefined } })
         } catch (error) {
             console.error('Logout failed:', error)
         }

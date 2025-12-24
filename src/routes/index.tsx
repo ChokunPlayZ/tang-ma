@@ -24,10 +24,10 @@ function HomePage() {
           }
         }
 
-        router.navigate({ to: '/login' })
+        router.navigate({ to: '/login', search: { redirect: undefined } })
       } catch (error) {
         console.error('Auth check failed:', error)
-        router.navigate({ to: '/login' })
+        router.navigate({ to: '/login', search: { redirect: undefined } })
       } finally {
         setChecking(false)
       }

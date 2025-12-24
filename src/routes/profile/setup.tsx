@@ -33,14 +33,14 @@ function ProfileSetupPage() {
                 })
 
                 if (!response.ok) {
-                    router.navigate({ to: '/login' })
+                    router.navigate({ to: '/login', search: { redirect: undefined } })
                     return
                 }
 
                 const data = await response.json()
 
                 if (data.needsLogin) {
-                    router.navigate({ to: '/login' })
+                    router.navigate({ to: '/login', search: { redirect: undefined } })
                     return
                 }
 
@@ -52,7 +52,7 @@ function ProfileSetupPage() {
                 setLoading(false)
             } catch (error) {
                 console.error('Onboarding check failed:', error)
-                router.navigate({ to: '/login' })
+                router.navigate({ to: '/login', search: { redirect: undefined } })
             }
         }
 

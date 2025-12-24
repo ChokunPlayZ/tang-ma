@@ -31,7 +31,7 @@ function TripsIndexPage() {
                 })
 
                 if (!response.ok) {
-                    router.navigate({ to: '/login' })
+                    router.navigate({ to: '/login', search: { redirect: undefined } })
                     return
                 }
 

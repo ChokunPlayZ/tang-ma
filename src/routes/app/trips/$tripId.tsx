@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../compo
 import { ArrowLeft, Plus, Users, Receipt, Wallet, ChevronRight, Check, Upload, X, History, ImageIcon } from 'lucide-react'
 import generatePayload from 'promptpay-qr'
 import QRCode from 'qrcode'
+import { ShareTripDialog } from '../../../components/trips/ShareTripDialog'
 
 type Member = {
     id: number
@@ -165,6 +166,7 @@ function TripDetailPage() {
                         <h1 className="text-xl font-bold">{trip.name}</h1>
                         <p className="text-sm text-gray-500">รหัส: {trip.code}</p>
                     </div>
+                    <ShareTripDialog tripCode={trip.code} tripName={trip.name} />
                 </div>
             </div>
 
