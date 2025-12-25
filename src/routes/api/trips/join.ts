@@ -164,7 +164,8 @@ export const Route = createFileRoute('/api/trips/join')({
                             success: true,
                             tripId: trip.id,
                             requiresSubGroupSelection: true,
-                            subGroups: availableSubGroups
+                            subGroups: availableSubGroups,
+                            requiresOnboarding: !user.displayName || !user.promptPayId
                         })
                     }
 
