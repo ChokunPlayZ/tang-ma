@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { createFileRoute, useRouter, useSearch } from '@tanstack/react-router'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
@@ -20,6 +21,7 @@ export const Route = createFileRoute('/login')({
 function LoginPage() {
     const router = useRouter()
     const { redirect } = useSearch({ from: '/login' })
+    const [phoneError, setPhoneError] = useState('')
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -77,8 +79,21 @@ function LoginPage() {
                                 type="tel"
                                 placeholder="081 234 5678"
                                 required
-                                className="text-lg py-6 bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 focus:ring-cyan-500 transition-all text-center tracking-wider"
+                                className={`text-lg py-6 bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 focus:ring-cyan-500 transition-all text-center tracking-wider ${phoneError ? 'border-red-500 focus:ring-red-500' : ''}`}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/\D/g, '')
+                                    if (val.length > 0 && val[0] !== '0') {
+                                        setPhoneError('เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 0')
+                                    } else if (val.length > 10) {
+                                        setPhoneError('เบอร์โทรศัพท์ต้องมี 10 หลัก')
+                                    } else {
+                                        setPhoneError('')
+                                    }
+                                }}
                             />
+                            {phoneError && (
+                                <p className="text-sm text-red-500 text-center">{phoneError}</p>
+                            )}
                         </div>
                         <Button
                             type="submit"
