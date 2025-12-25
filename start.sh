@@ -3,7 +3,7 @@ set -e
 
 # Run migrations
 echo "Running database migrations..."
-bun run drizzle-kit migrate --config drizzle.config.prod.ts
+bunx drizzle-kit migrate --config drizzle.config.prod.ts
 
 # Start the server
 echo "Starting server..."

@@ -56,7 +56,7 @@ function LoginPage() {
             <Card className="w-full max-w-md shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
                 <CardHeader className="space-y-3 text-center pb-8">
                     <div className="mx-auto w-16 h-16 bg-linear-to-br from-cyan-400 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg mb-2 rotate-3 hover:rotate-6 transition-transform">
-                        <span className="text-3xl">🗺️</span>
+                        <span className="text-3xl">💸</span>
                     </div>
                     <div>
                         <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-cyan-600 to-teal-600 dark:from-cyan-400 dark:to-teal-400">
