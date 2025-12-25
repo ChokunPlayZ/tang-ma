@@ -1,6 +1,6 @@
 import { migrateToLatest } from '../../db/migrate'
 
-export default defineNitroPlugin(async (_nitroApp) => {
+export default async (_nitroApp: any) => {
     try {
         await migrateToLatest()
     } catch (err) {
@@ -9,4 +9,4 @@ export default defineNitroPlugin(async (_nitroApp) => {
         // but it's critical. For now, we log error. 
         // In strictly orchestrated envs, you might want to process.exit(1)
     }
-})
+}
