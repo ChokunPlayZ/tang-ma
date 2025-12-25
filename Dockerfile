@@ -29,6 +29,8 @@ COPY --from=prerelease /app/.output .output
 
 # Copy migrations (needed for src/db/migrate.ts)
 COPY --from=prerelease /app/drizzle ./drizzle
+COPY --from=prerelease /app/drizzle.config.ts .
+COPY --from=prerelease /app/src/db ./src/db
 
 # Expose the port the app runs on
 EXPOSE 3000/tcp
