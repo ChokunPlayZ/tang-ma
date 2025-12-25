@@ -133,59 +133,75 @@ function ProfileSetupPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-            <Card className="w-full max-w-md shadow-xl border-0">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">ตั้งค่าโปรไฟล์ (Setup Profile)</CardTitle>
-                    <CardDescription className="text-center">
-                        กรุณาระบุชื่อและ QR รับเงินของคุณ
-                        <br />
-                        Set your name and payment QR
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-cyan-600 to-teal-800 p-4">
+            <Card className="w-full max-w-md shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
+                <CardHeader className="text-center pb-2">
+                    <div className="mx-auto w-12 h-12 bg-linear-to-br from-cyan-400 to-teal-600 rounded-xl flex items-center justify-center shadow-lg mb-4 rotate-3">
+                        <span className="text-2xl">👤</span>
+                    </div>
+                    <CardTitle className="text-2xl font-bold bg-clip-text text-transparent bg-linear-to-r from-cyan-600 to-teal-600 dark:from-cyan-400 dark:to-teal-400">
+                        ตั้งค่าโปรไฟล์
+                    </CardTitle>
+                    <CardDescription>
+                        ระบุชื่อและ QR รับเงินของคุณเพื่อให้เพื่อนจ่ายเงินให้คุณได้สะดวก
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-2">
-                            <Label htmlFor="displayName">ชื่อเล่น (Display Name)</Label>
+                            <Label htmlFor="displayName" className="text-sm font-medium">ชื่อเล่น (Display Name)</Label>
                             <Input
                                 id="displayName"
                                 value={displayName}
                                 onChange={(e) => setDisplayName(e.target.value)}
                                 placeholder="เช่น น้องเอ (e.g. Alice)"
                                 required
+                                className="bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 py-6 text-lg"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label>QR รับเงิน (PromptPay QR)</Label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:bg-gray-50 transition cursor-pointer relative">
+                            <Label className="text-sm font-medium">QR รับเงิน (PromptPay QR)</Label>
+                            <div className={`border-2 border-dashed rounded-xl p-6 text-center transition-all relative overflow-hidden group ${qrStatus === 'SUCCESS'
+                                    ? 'border-green-500 bg-green-50/50 dark:bg-green-900/20'
+                                    : 'border-gray-300 dark:border-gray-700 hover:border-cyan-500 hover:bg-cyan-50/50 dark:hover:bg-cyan-900/20'
+                                }`}>
                                 <Input
                                     type="file"
                                     accept="image/*"
-                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                                     onChange={handleFileChange}
                                 />
-                                <div className="space-y-2">
-                                    <div className="text-4xl">📸</div>
-                                    <div className="text-sm text-gray-500">
-                                        {qrStatus === 'IDLE' && 'แตะเพื่ออัพโหลด QR Code'}
-                                        {qrStatus === 'READING' && 'กำลังอ่านข้อมูล...'}
-                                        {qrStatus === 'SUCCESS' && 'อ่านข้อมูลสำเร็จ! ✅'}
-                                        {qrStatus === 'ERROR' && 'อ่านไม่สำเร็จ ลองใหม่อีกครั้ง ❌'}
+                                <div className="space-y-3 pointer-events-none relative z-0">
+                                    <div className={`text-4xl transition-transform duration-300 ${qrStatus === 'READING' ? 'animate-pulse' : 'group-hover:scale-110'}`}>
+                                        {qrStatus === 'SUCCESS' ? '✅' : '📸'}
+                                    </div>
+                                    <div className="text-sm">
+                                        {qrStatus === 'IDLE' && (
+                                            <span className="text-gray-500">แตะเพื่ออัพโหลดรูป QR PromptPay ของคุณ</span>
+                                        )}
+                                        {qrStatus === 'READING' && (
+                                            <span className="text-cyan-600 font-medium">กำลังอ่านข้อมูล...</span>
+                                        )}
+                                        {qrStatus === 'SUCCESS' && (
+                                            <div className="text-green-600">
+                                                <div className="font-bold">อ่านข้อมูลสำเร็จ!</div>
+                                                <div className="text-xs mt-1 opacity-80 backdrop-blur-sm p-1 rounded">
+                                                    ID: {scannedId} ({scannedType})
+                                                </div>
+                                            </div>
+                                        )}
+                                        {qrStatus === 'ERROR' && (
+                                            <span className="text-red-500 font-medium">อ่านไม่สำเร็จ กรุณาลองใหม่</span>
+                                        )}
                                     </div>
                                 </div>
                             </div>
-                            {qrStatus === 'SUCCESS' && (
-                                <div className="text-sm bg-green-50 text-green-700 p-3 rounded-md mt-2">
-                                    <strong>PromptPay ID:</strong> {scannedId} <br />
-                                    <strong>Type:</strong> {scannedType}
-                                </div>
-                            )}
                         </div>
 
                         <Button
                             type="submit"
-                            className="w-full bg-cyan-600 hover:bg-cyan-700"
+                            className="w-full text-lg py-6 bg-linear-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 shadow-lg hover:shadow-cyan-500/20 transition-all transform hover:-translate-y-0.5 rounded-xl"
                             disabled={qrStatus !== 'SUCCESS' || !displayName}
                         >
                             บันทึกข้อมูล (Save)

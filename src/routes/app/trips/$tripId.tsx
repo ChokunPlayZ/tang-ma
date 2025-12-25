@@ -6,7 +6,7 @@ import { Input } from '../../../components/ui/input'
 import { Label } from '../../../components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../../../components/ui/dialog'
-import { ArrowLeft, Plus, Users, Receipt, Wallet, ChevronRight, Check, Upload, X, History, ImageIcon } from 'lucide-react'
+import { ArrowLeft, Plus, Users, Receipt, Wallet, ChevronRight, Check, Upload, X, History, ImageIcon, ArrowRight } from 'lucide-react'
 import generatePayload from 'promptpay-qr'
 import QRCode from 'qrcode'
 import { ShareTripDialog } from '../../../components/trips/ShareTripDialog'
@@ -40,6 +40,7 @@ type Expense = {
     paidByUserId: number
     paidByName: string | null
     shares: { userId: number; owesAmount: string; userName: string | null }[]
+    slipUrl: string | null
 }
 
 type Balance = {
@@ -155,16 +156,20 @@ function TripDetailPage() {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Header */}
-            <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-10">
+            <div className="border-b sticky top-0 z-10 shadow-sm/50 backdrop-blur-md bg-white/80 dark:bg-gray-800/80 supports-backdrop-filter:bg-white/60">
                 <div className="max-w-2xl mx-auto p-4 flex items-center gap-4">
                     <Link to="/app/trips">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
                             <ArrowLeft size={20} />
                         </Button>
                     </Link>
-                    <div className="flex-1">
-                        <h1 className="text-xl font-bold">{trip.name}</h1>
-                        <p className="text-sm text-gray-500">รหัส: {trip.code}</p>
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-xl font-bold truncate bg-clip-text text-transparent bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300">
+                            {trip.name}
+                        </h1>
+                        <p className="text-sm text-gray-500 flex items-center gap-1">
+                            <span className="font-mono bg-gray-100 dark:bg-gray-700 px-1.5 rounded text-xs">#{trip.code}</span>
+                        </p>
                     </div>
                     <ShareTripDialog tripCode={trip.code} tripName={trip.name} />
                 </div>
@@ -504,13 +509,13 @@ function ExpensesTab({
     return (
         <>
             {/* Summary & Add Button */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between bg-linear-to-r from-cyan-50 to-teal-50 dark:from-cyan-950/30 dark:to-teal-950/30 p-4 rounded-2xl border border-cyan-100 dark:border-cyan-900/50 mb-6">
                 <div>
-                    <div className="text-sm text-gray-500">รวมทั้งหมด</div>
-                    <div className="text-2xl font-bold">฿{totalExpenses.toLocaleString()}</div>
+                    <div className="text-xs font-medium text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">รวมค่าใช้จ่ายทั้งหมด</div>
+                    <div className="text-3xl font-bold text-gray-900 dark:text-gray-100">฿{totalExpenses.toLocaleString()}</div>
                 </div>
-                <Button onClick={() => setIsAdding(true)} className="bg-cyan-600 gap-2">
-                    <Plus size={16} /> เพิ่มรายจ่าย
+                <Button onClick={() => setIsAdding(true)} className="bg-linear-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 shadow-lg shadow-cyan-500/20 gap-2 rounded-full px-6">
+                    <Plus size={18} /> เพิ่มรายจ่าย
                 </Button>
             </div>
 
@@ -661,28 +666,47 @@ function ExpensesTab({
 
             {/* Expenses List */}
             {expenses.length === 0 ? (
-                <Card>
-                    <CardContent className="py-10 text-center text-gray-500">
-                        <Receipt size={40} className="mx-auto mb-2 opacity-50" />
-                        <p>ยังไม่มีรายจ่าย</p>
-                    </CardContent>
-                </Card>
+
+                <div className="py-12 text-center text-gray-500 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border border-dashed border-gray-200 dark:border-gray-700">
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Receipt size={32} className="text-gray-400" />
+                    </div>
+                    <p className="font-medium">ยังไม่มีรายจ่าย</p>
+                    <p className="text-sm mt-1">เพิ่มรายจ่ายแรกของคุณเลย!</p>
+                </div>
             ) : (
                 <div className="space-y-2">
                     {expenses.map(expense => (
-                        <Card key={expense.id}>
-                            <CardContent className="py-3">
+                        <Card key={expense.id} className="hover:shadow-md transition-shadow duration-200 border-l-4 border-l-transparent hover:border-l-cyan-500 group">
+                            <CardContent className="p-4">
                                 <div className="flex items-center justify-between">
-                                    <div>
-                                        <div className="font-medium">{expense.title}</div>
-                                        <div className="text-sm text-gray-500">
-                                            จ่ายโดย {expense.paidByName} • หาร {expense.shares.length} คน
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/30 rounded-full flex items-center justify-center shrink-0">
+                                            <Receipt size={18} className="text-cyan-600 dark:text-cyan-400" />
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+                                                {expense.title}
+                                            </div>
+                                            <div className="text-xs text-gray-500 mt-0.5 flex items-center gap-1">
+                                                <span className="font-medium text-gray-700 dark:text-gray-300">{expense.paidByName}</span>
+                                                <span>•</span>
+                                                <span>หาร {expense.shares.length} คน</span>
+                                            </div>
+                                            {expense.slipUrl && (
+                                                <div className="flex items-center gap-1 text-xs text-cyan-600 mt-1">
+                                                    <ImageIcon size={12} />
+                                                    <span>มีสลิป</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="font-bold text-lg">฿{parseFloat(expense.amount).toLocaleString()}</div>
-                                        <div className="text-xs text-gray-500">
-                                            คนละ ฿{(parseFloat(expense.amount) / expense.shares.length).toFixed(2)}
+                                        <div className="font-bold text-lg text-gray-900 dark:text-gray-100">
+                                            ฿{parseFloat(expense.amount).toLocaleString()}
+                                        </div>
+                                        <div className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full inline-block mt-1">
+                                            คนละ ฿{(parseFloat(expense.amount) / expense.shares.length).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </div>
                                     </div>
                                 </div>
@@ -716,13 +740,20 @@ function BalancesTab({
     return (
         <>
             {/* What I owe */}
-            <Card>
+            <Card className="border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-lg text-red-600">คุณต้องจ่าย</CardTitle>
+                    <CardTitle className="text-lg text-red-600 flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                            <Wallet size={16} />
+                        </div>
+                        คุณต้องจ่าย
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {myDebts.length === 0 ? (
-                        <p className="text-gray-500 text-center py-4">ไม่มียอดค้างจ่าย 🎉</p>
+                        <div className="py-8 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed text-gray-400">
+                            <p>ไม่มียอดค้างจ่าย 🎉</p>
+                        </div>
                     ) : (
                         <div className="space-y-3">
                             {myDebts.map((debt, i) => (
@@ -734,18 +765,30 @@ function BalancesTab({
             </Card>
 
             {/* What others owe me */}
-            <Card>
+            <Card className="border-l-4 border-l-green-500 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
-                    <CardTitle className="text-lg text-green-600">รอรับเงิน</CardTitle>
+                    <CardTitle className="text-lg text-green-600 flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600">
+                            <Wallet size={16} />
+                        </div>
+                        รอรับเงิน
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {owedToMe.length === 0 ? (
-                        <p className="text-gray-500 text-center py-4">ไม่มียอดที่รอรับ</p>
+                        <div className="py-8 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed text-gray-400">
+                            <p>ไม่มียอดที่รอรับ</p>
+                        </div>
                     ) : (
                         <div className="space-y-2">
                             {owedToMe.map((b, i) => (
-                                <div key={i} className="flex items-center justify-between py-2 border-b last:border-0">
-                                    <span>{b.fromUserName}</span>
+                                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg group hover:bg-green-50 dark:hover:bg-green-900/10 transition-colors">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300">
+                                            {b.fromUserName?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <span className="font-medium text-gray-700 dark:text-gray-200">{b.fromUserName}</span>
+                                    </div>
                                     <span className="font-bold text-green-600">+฿{b.amount.toLocaleString()}</span>
                                 </div>
                             ))}
@@ -928,61 +971,65 @@ function PaymentsTab({ payments }: { payments: Payment[] }) {
 
     return (
         <>
-            <Card>
+            <Card className="shadow-sm">
                 <CardHeader>
-                    <CardTitle className="text-lg">ประวัติการชำระเงิน</CardTitle>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                        <History size={20} className="text-cyan-600" />
+                        ประวัติการชำระเงิน
+                    </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-3 p-4">
                     {payments.map(payment => (
-                        <div key={payment.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div key={payment.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:shadow-sm transition-shadow border border-transparent hover:border-gray-200 dark:hover:border-gray-700">
                             <div className="flex-1">
-                                <div className="font-medium">
-                                    {payment.fromUserName} → {payment.toUserName}
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-semibold text-gray-900 dark:text-gray-100">{payment.fromUserName}</span>
+                                    <ArrowRight size={14} className="text-gray-400" />
+                                    <span className="font-semibold text-gray-900 dark:text-gray-100">{payment.toUserName}</span>
                                 </div>
-                                <div className="text-lg font-bold text-green-600">
-                                    ฿{parseFloat(payment.amount).toLocaleString()}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                    {new Date(payment.createdAt).toLocaleDateString('th-TH', {
-                                        day: 'numeric',
-                                        month: 'short',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}
+                                <div className="flex items-baseline gap-2">
+                                    <div className="text-lg font-bold text-green-600">
+                                        ฿{parseFloat(payment.amount).toLocaleString()}
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                        {new Date(payment.createdAt).toLocaleDateString('th-TH', {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                             {payment.slipUrl && (
-                                <Button
-                                    variant="outline"
-                                    size="sm"
+                                <button
                                     onClick={() => setSelectedSlip(payment.slipUrl)}
-                                    className="gap-1"
+                                    className="p-2 text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 rounded-lg transition-colors"
                                 >
-                                    <ImageIcon size={14} />
-                                    ดูสลิป
-                                </Button>
+                                    <ImageIcon size={20} />
+                                </button>
                             )}
                         </div>
                     ))}
                 </CardContent>
+                {/* Slip Viewer Dialog */}
+                <Dialog open={!!selectedSlip} onOpenChange={() => setSelectedSlip(null)}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>สลิปการโอนเงิน</DialogTitle>
+                        </DialogHeader>
+                        {selectedSlip && (
+                            <img
+                                src={selectedSlip}
+                                alt="Payment slip"
+                                className="w-full rounded-lg"
+                            />
+                        )}
+                    </DialogContent>
+                </Dialog>
             </Card>
-
-            {/* Slip Viewer Dialog */}
-            <Dialog open={!!selectedSlip} onOpenChange={() => setSelectedSlip(null)}>
-                <DialogContent className="max-w-md">
-                    <DialogHeader>
-                        <DialogTitle>สลิปการโอนเงิน</DialogTitle>
-                    </DialogHeader>
-                    {selectedSlip && (
-                        <img
-                            src={selectedSlip}
-                            alt="Payment slip"
-                            className="w-full rounded-lg"
-                        />
-                    )}
-                </DialogContent>
-            </Dialog>
         </>
     )
 }
+

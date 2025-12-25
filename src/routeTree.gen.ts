@@ -18,7 +18,6 @@ import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as AppTripsIndexRouteImport } from './routes/app/trips/index'
 import { Route as ApiTripsIndexRouteImport } from './routes/api/trips/index'
 import { Route as ApiProfileIndexRouteImport } from './routes/api/profile/index'
-import { Route as AppTripsCreateRouteImport } from './routes/app/trips/create'
 import { Route as AppTripsTripIdRouteImport } from './routes/app/trips/$tripId'
 import { Route as ApiTripsJoinRouteImport } from './routes/api/trips/join'
 import { Route as ApiTripsCreateRouteImport } from './routes/api/trips/create'
@@ -77,11 +76,6 @@ const ApiTripsIndexRoute = ApiTripsIndexRouteImport.update({
 const ApiProfileIndexRoute = ApiProfileIndexRouteImport.update({
   id: '/api/profile/',
   path: '/api/profile/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AppTripsCreateRoute = AppTripsCreateRouteImport.update({
-  id: '/app/trips/create',
-  path: '/app/trips/create',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppTripsTripIdRoute = AppTripsTripIdRouteImport.update({
@@ -172,7 +166,6 @@ export interface FileRoutesByFullPath {
   '/api/trips/create': typeof ApiTripsCreateRoute
   '/api/trips/join': typeof ApiTripsJoinRoute
   '/app/trips/$tripId': typeof AppTripsTripIdRoute
-  '/app/trips/create': typeof AppTripsCreateRoute
   '/api/profile': typeof ApiProfileIndexRoute
   '/api/trips': typeof ApiTripsIndexRoute
   '/app/trips': typeof AppTripsIndexRoute
@@ -198,7 +191,6 @@ export interface FileRoutesByTo {
   '/api/trips/create': typeof ApiTripsCreateRoute
   '/api/trips/join': typeof ApiTripsJoinRoute
   '/app/trips/$tripId': typeof AppTripsTripIdRoute
-  '/app/trips/create': typeof AppTripsCreateRoute
   '/api/profile': typeof ApiProfileIndexRoute
   '/api/trips': typeof ApiTripsIndexRoute
   '/app/trips': typeof AppTripsIndexRoute
@@ -225,7 +217,6 @@ export interface FileRoutesById {
   '/api/trips/create': typeof ApiTripsCreateRoute
   '/api/trips/join': typeof ApiTripsJoinRoute
   '/app/trips/$tripId': typeof AppTripsTripIdRoute
-  '/app/trips/create': typeof AppTripsCreateRoute
   '/api/profile/': typeof ApiProfileIndexRoute
   '/api/trips/': typeof ApiTripsIndexRoute
   '/app/trips/': typeof AppTripsIndexRoute
@@ -253,7 +244,6 @@ export interface FileRouteTypes {
     | '/api/trips/create'
     | '/api/trips/join'
     | '/app/trips/$tripId'
-    | '/app/trips/create'
     | '/api/profile'
     | '/api/trips'
     | '/app/trips'
@@ -279,7 +269,6 @@ export interface FileRouteTypes {
     | '/api/trips/create'
     | '/api/trips/join'
     | '/app/trips/$tripId'
-    | '/app/trips/create'
     | '/api/profile'
     | '/api/trips'
     | '/app/trips'
@@ -305,7 +294,6 @@ export interface FileRouteTypes {
     | '/api/trips/create'
     | '/api/trips/join'
     | '/app/trips/$tripId'
-    | '/app/trips/create'
     | '/api/profile/'
     | '/api/trips/'
     | '/app/trips/'
@@ -332,7 +320,6 @@ export interface RootRouteChildren {
   ApiTripsCreateRoute: typeof ApiTripsCreateRoute
   ApiTripsJoinRoute: typeof ApiTripsJoinRoute
   AppTripsTripIdRoute: typeof AppTripsTripIdRoute
-  AppTripsCreateRoute: typeof AppTripsCreateRoute
   ApiProfileIndexRoute: typeof ApiProfileIndexRoute
   ApiTripsIndexRoute: typeof ApiTripsIndexRoute
   AppTripsIndexRoute: typeof AppTripsIndexRoute
@@ -406,13 +393,6 @@ declare module '@tanstack/react-router' {
       path: '/api/profile'
       fullPath: '/api/profile'
       preLoaderRoute: typeof ApiProfileIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/app/trips/create': {
-      id: '/app/trips/create'
-      path: '/app/trips/create'
-      fullPath: '/app/trips/create'
-      preLoaderRoute: typeof AppTripsCreateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/trips/$tripId': {
@@ -545,7 +525,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiTripsCreateRoute: ApiTripsCreateRoute,
   ApiTripsJoinRoute: ApiTripsJoinRoute,
   AppTripsTripIdRoute: AppTripsTripIdRoute,
-  AppTripsCreateRoute: AppTripsCreateRoute,
   ApiProfileIndexRoute: ApiProfileIndexRoute,
   ApiTripsIndexRoute: ApiTripsIndexRoute,
   AppTripsIndexRoute: AppTripsIndexRoute,

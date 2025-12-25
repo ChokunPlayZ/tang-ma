@@ -122,86 +122,106 @@ export function JoinTripDialog() {
         }
     }
 
+
     return (
         <Dialog open={isOpen} onOpenChange={(open) => {
             setIsOpen(open)
             if (!open) resetForm()
         }}>
             <DialogTrigger asChild>
-                <Button variant="outline">เข้าร่วมทริป (Join)</Button>
+                <Button variant="outline" className="gap-2">
+                    <span className="text-lg">👋</span> เข้าร่วมทริป
+                </Button>
             </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>เข้าร่วมทริป</DialogTitle>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader className="text-center">
+                    <div className="mx-auto w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-full flex items-center justify-center mb-4">
+                        <span className="text-2xl">🎟️</span>
+                    </div>
+                    <DialogTitle className="text-xl">เข้าร่วมทริป</DialogTitle>
                 </DialogHeader>
 
                 {step === 'CODE' && (
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>รหัสทริป (Trip Code) *</Label>
-                            <Input
-                                value={code}
-                                onChange={(e) => {
-                                    setCode(e.target.value.toUpperCase())
-                                    setCOdeError('')
-                                }}
-                                placeholder="XXXXXX"
-                                maxLength={6}
-                                className="text-center text-2xl tracking-widest uppercase"
-                            />
-                            {codeError && <p className="text-sm text-red-500">{codeError}</p>}
+                    <div className="space-y-6 py-4">
+                        <div className="space-y-4">
+                            <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-xl border border-gray-100 dark:border-gray-800 text-center">
+                                <Label className="block mb-4 text-gray-500">กรอกรหัสทริป 6 หลัก</Label>
+                                <Input
+                                    value={code}
+                                    onChange={(e) => {
+                                        setCode(e.target.value.toUpperCase())
+                                        setCOdeError('')
+                                    }}
+                                    placeholder="XXXXXX"
+                                    maxLength={6}
+                                    className="text-center text-3xl font-mono tracking-[0.5em] uppercase border-0 bg-transparent focus-visible:ring-0 placeholder:text-gray-300 dark:placeholder:text-gray-700 p-0 h-auto"
+                                    autoFocus
+                                />
+                            </div>
+                            {codeError && (
+                                <div className="text-sm text-red-500 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg flex items-center gap-2 justify-center">
+                                    <span>⚠️</span> {codeError}
+                                </div>
+                            )}
                         </div>
                         <Button
                             onClick={handleCodeSubmit}
-                            className="w-full bg-cyan-600"
-                            disabled={isLoading}
+                            className="w-full bg-cyan-600 hover:bg-cyan-700 h-12 text-lg"
+                            disabled={isLoading || code.length !== 6}
                         >
-                            {isLoading ? 'กำลังตรวจสอบ...' : 'ถัดไป (Next)'}
+                            {isLoading ? 'กำลังตรวจสอบ...' : 'ถัดไป'}
                         </Button>
                     </div>
                 )}
 
                 {step === 'SUBGROUP' && (
-                    <div className="space-y-4">
-                        <p className="text-sm text-gray-500">
-                            ทริปนี้มีกลุ่มย่อย คุณสามารถเลือกเข้าหลายกลุ่มได้ (เช่น อยู่รถคัน A และเป็นคนดื่ม)
-                        </p>
-                        <div className="grid gap-2">
+                    <div className="space-y-6">
+                        <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-lg text-sm text-cyan-800 dark:text-cyan-200">
+                            <strong>ทริปนี้มีกลุ่มย่อย!</strong> เลือกกลุ่มที่คุณต้องการเข้าร่วม (เลือกได้มากกว่า 1)
+                        </div>
+
+                        <div className="grid gap-3 max-h-[300px] overflow-y-auto pr-2">
                             {subGroups.map(sg => {
                                 const isSelected = selectedSubGroups.includes(sg.id)
                                 return (
-                                    <Button
+                                    <button
                                         key={sg.id}
-                                        variant={isSelected ? "default" : "outline"}
                                         onClick={() => toggleSubGroup(sg.id)}
-                                        className="justify-start"
+                                        className={`
+                                            flex items-center justify-between p-4 rounded-xl border transition-all text-left
+                                            ${isSelected
+                                                ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 shadow-sm'
+                                                : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            }
+                                        `}
                                     >
-                                        {isSelected && <Check size={16} className="mr-2" />}
-                                        {sg.name}
-                                    </Button>
+                                        <span className="font-medium">{sg.name}</span>
+                                        {isSelected && (
+                                            <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-white">
+                                                <Check size={14} strokeWidth={3} />
+                                            </div>
+                                        )}
+                                    </button>
                                 )
                             })}
                         </div>
-                        <p className="text-xs text-gray-400">
-                            คุณสามารถเปลี่ยนกลุ่มได้ภายหลังในหน้าทริป
-                        </p>
-                        <div className="flex gap-2">
+
+                        <div className="flex gap-3 pt-2">
                             <Button
                                 variant="ghost"
                                 onClick={() => {
-                                    // Skip subgroup selection
                                     setIsOpen(false)
                                     resetForm()
                                     router.invalidate()
                                     router.navigate({ to: `/app/trips/${tripId}` as any })
                                 }}
-                                className="flex-1"
+                                className="flex-1 text-gray-500"
                             >
                                 ข้ามไปก่อน
                             </Button>
                             <Button
                                 onClick={handleConfirmSubGroups}
-                                className="flex-1 bg-cyan-600"
+                                className="flex-1 bg-cyan-600 hover:bg-cyan-700"
                                 disabled={isLoading}
                             >
                                 {isLoading ? 'กำลังบันทึก...' : 'ยืนยัน'}
@@ -213,3 +233,4 @@ export function JoinTripDialog() {
         </Dialog>
     )
 }
+
