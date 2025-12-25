@@ -7,4 +7,4 @@ bunx drizzle-kit migrate --config drizzle.config.prod.ts
 
 # Start the server
 echo "Starting server..."
-exec bun run .output/server/index.mjs
+bun run .output/server/index.mjs
